@@ -14,7 +14,7 @@
   margin-bottom: 1em;
 
   @include breakpoint($large) {
-    @include span(2 of 12);
+    @include span(3 of 12);
     opacity: 1;
     -webkit-transition: opacity 0.2s ease-in-out;
             transition: opacity 0.2s ease-in-out;
@@ -92,7 +92,7 @@
   }
 
   img {
-    max-width: 175px;
+    max-width: 240px;
     min-width: 75px;
     border-radius: 50%;
 
@@ -235,6 +235,15 @@
 
   li {
     white-space: nowrap;
+  }
+
+  li.no-url {
+    display: block;
+    margin-bottom: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: $type-size-5;
   }
 
   a {

@@ -8,7 +8,9 @@
   {% assign canonical_url = page.url | replace: "index.html", "" | prepend: site.url %}
 {% endif %}
 
-<title>{{ site.title }} - Homepage</title>
+{% assign seo_title = page.title | default: site.title %}
+
+<title>{{ seo_title }}</title>
 
 {% assign seo_description = page.description | default: page.excerpt | default: site.description %}
 {% if seo_description %}
@@ -29,25 +31,40 @@
   {% assign seo_author_twitter = seo_author_twitter | replace: "@", "" %}
 {% endif %}
 
-<meta property="og:locale" content="en">
+{% if seo_description %}
+<meta name="description" content="{{ seo_description }}">
+{% endif %}
+<meta name="author" content="{{ site.author.name }}">
+{% if site.keywords %}<meta name="keywords" content="{{ site.keywords }}">{% endif %}
+
+<meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="{{ site.title }}">
-<meta property="og:title" content="{{ site.title }}">
+<meta property="og:title" content="{{ seo_title }}">
+<meta property="og:type" content="profile">
+<meta property="profile:username" content="{{ site.author.name }}">
 
 {% if seo_url %}
   <link rel="canonical" href="{{ page.url | prepend: seo_url | replace: "/index.html", "/" }}">
   <meta property="og:url" content="{{ page.url | prepend: seo_url | replace: "/index.html", "/" }}">
 {% endif %}
 
-{% if page.excerpt %}
+{% if seo_description %}
   <meta property="og:description" content="{{ seo_description }}">
 {% endif %}
 
+{% if site.author.avatar and site.url %}
+  <meta property="og:image" content="{{ site.author.avatar | prepend: '/' | prepend: site.url | replace: '//', '/' | replace: 'https:/', 'https://' }}">
+  <meta property="og:image:alt" content="{{ site.author.name }}">
+{% endif %}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ seo_title }}">
+{% if seo_description %}<meta name="twitter:description" content="{{ seo_description }}">{% endif %}
+{% if site.author.avatar and site.url %}<meta name="twitter:image" content="{{ site.author.avatar | prepend: '/' | prepend: site.url | replace: '//', '/' | replace: 'https:/', 'https://' }}">{% endif %}
+
 {% if site.twitter.username %}
   <meta name="twitter:site" content="@{{ site.twitter.username | replace: "@", "" }}">
-  <meta name="twitter:title" content="{{ page.title | default: site.title | markdownify | strip_html | strip_newlines | escape_once }}">
-  <meta name="twitter:description" content="{{ seo_description }}">
   <meta name="twitter:url" content="{{ canonical_url }}">
-
   {% if seo_author_twitter %}
     <meta name="twitter:creator" content="@{{ seo_author_twitter }}">
   {% endif %}
@@ -57,7 +74,6 @@
   {% if site.facebook.publisher %}
     <meta property="article:publisher" content="{{ site.facebook.publisher }}">
   {% endif %}
-
   {% if site.facebook.app_id %}
     <meta property="fb:app_id" content="{{ site.facebook.app_id }}">
   {% endif %}
@@ -72,4 +88,35 @@
 {% if site.baidu_site_verification %}
   <meta name="baidu-site-verification" content="{{ site.baidu_site_verification }}" />
 {% endif %}
+
+<!-- JSON-LD: Person schema (Google Knowledge Graph signal) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": {{ site.author.name | jsonify }},
+  "jobTitle": "M.Sc. Student in Computer Science and Technology",
+  "description": {{ site.description | jsonify }},
+  "url": "{{ site.url }}/",
+  "image": "{{ site.url }}/{{ site.author.avatar }}",
+  "email": "mailto:{{ site.author.email }}",
+  "affiliation": {
+    "@type": "CollegeOrUniversity",
+    "name": "Chongqing University of Posts and Telecommunications",
+    "department": "School of Computer Science and Technology",
+    "url": "https://english.cqupt.edu.cn/"
+  },
+  "knowsAbout": [
+    "Image Aesthetic Assessment",
+    "Image Quality Assessment",
+    "Computer Vision",
+    "Human-aligned Vision"
+  ],
+  "sameAs": [
+    "{{ site.author.googlescholar }}"{% if site.author.github %},
+    "https://github.com/{{ site.author.github }}"{% endif %}{% if site.author.orcid %},
+    "{{ site.author.orcid }}"{% endif %}
+  ]
+}
+</script>
 <!-- end SEO -->

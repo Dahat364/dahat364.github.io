@@ -40,70 +40,1252 @@
 @import "vendor/magnific-popup/magnific-popup";
 @import "print";
 
-.paper-box {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    border-bottom: 1px #efefef solid;
-    padding: 2em 0 2em 0;
-    
+/* ================================================================
+   i18n — bilingual visibility
+   Default is English. The <html> element gets .lang-en or .lang-zh
+   from an inline script in head.html (avoids FOUC on first paint).
+   ================================================================ */
+html.lang-en [lang="zh"] { display: none !important; }
+html.lang-zh [lang="en"] { display: none !important; }
 
-    .paper-box-image{
-        justify-content: center;
-        display: flex;
-        width: 100%;
-        order: 2;
-        img {
-            max-width: 400px;
-            box-shadow: 3px 3px 6px #888;
-            object-fit: cover;
-        }
+/* Language toggle — modern segmented pill with sliding indicator */
+.lang-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(241, 245, 249, 0.92);
+  border: 1px solid rgba(203, 213, 225, 0.7);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05),
+              inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  user-select: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  &__indicator {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    border-radius: 999px;
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    box-shadow: 0 2px 6px rgba(30, 64, 175, 0.28);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  button {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    background: transparent;
+    border: 0;
+    color: #475569;
+    padding: 0.38em 0.95em;
+    min-width: 2.6em;
+    cursor: pointer;
+    font: inherit;
+    line-height: 1.2;
+    border-radius: 999px;
+    transition: color 0.25s ease;
+
+    &.active {
+      color: #fff;
     }
-    
-    .paper-box-text{
-        max-width: 100%;
-        order: 1;
-    }
-    
-    @include breakpoint($medium) {
-        .paper-box-image{
-            justify-content: left;
-            min-width: 200px;
-            max-width: 40%;
-            order: 1;
-        }
-        
-        .paper-box-text{
-            justify-content: left;
-            padding-left: 2em;
-            max-width: 60%;
-            order: 2;
-        }
 
+    &:not(.active):hover {
+      color: #1e40af;
     }
 
-
+    &:focus-visible {
+      outline: 2px solid rgba(37, 99, 235, 0.45);
+      outline-offset: 2px;
+    }
+  }
 }
 
-$scroll_offset : 2em;
-h1:before, .anchor:before { 
-    content: ''; 
-    display: block; 
-    position: relative; 
-    width: 0; 
-    height: $scroll_offset; 
-    margin-top: -$scroll_offset;
+/* Slide indicator when 中文 is active */
+html.lang-zh .lang-toggle__indicator {
+  transform: translateX(100%);
+}
+
+/* Lay out the masthead as a flex row so the language toggle stays pinned to the
+   right of the nav, independent of the greedy-nav's overflow behaviour. */
+.masthead__inner-wrap--flex {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+
+.masthead__inner-wrap--flex .masthead__menu {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.masthead__inner-wrap--flex > .lang-toggle {
+  flex: 0 0 auto;
+  margin-right: 0.2em;
+}
+
+@media (max-width: 767px) {
+  .lang-toggle {
+    font-size: 0.72rem;
+    padding: 2px;
+  }
+  .lang-toggle button {
+    padding: 0.3em 0.7em;
+    min-width: 2.3em;
+  }
+}
+
+/* ================================================================
+   CSS Custom Properties
+   ================================================================ */
+:root {
+  --accent-1:        #1e40af;
+  --accent-2:        #2563eb;
+  --accent-sky:      #38bdf8;
+  --accent-light:    #dbeafe;
+  --grad-accent:     linear-gradient(135deg, #1e40af, #2563eb);
+  --grad-progress:   linear-gradient(to right, #1e40af, #38bdf8);
+  --surface:         #ffffff;
+  --bg-page:         #f4f7fb;
+  --text-primary:    #1e293b;
+  --text-muted:      #64748b;
+  --border:          #e2e8f0;
+  --shadow-sm:       0 1px 4px rgba(0,0,0,0.07);
+  --shadow-md:       0 4px 16px rgba(30,64,175,0.10);
+  --shadow-lg:       0 10px 32px rgba(30,64,175,0.14);
+  --radius:          10px;
+  --radius-sm:       6px;
+  --ease:            cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ================================================================
+   Base: Font + Background
+   ================================================================ */
+body {
+  font-family: 'Inter', 'Trebuchet MS', Helvetica, sans-serif;
+  background-color: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ================================================================
+   Scroll Progress Bar (populated by ui-enhance.js)
+   ================================================================ */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: var(--grad-progress);
+  z-index: 9999;
+  border-radius: 0 2px 2px 0;
+  pointer-events: none;
+}
+
+/* ================================================================
+   Navigation — frosted glass + hover chips
+   ================================================================ */
+.masthead {
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--border);
+}
+
+.masthead__menu-item a {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 0.3em 0.55em;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s var(--ease);
+  letter-spacing: 0.005em;
+
+  &:hover {
+    color: var(--accent-1);
+    background: var(--accent-light);
+    text-decoration: none;
+  }
+}
+
+.masthead__menu-item--lg a {
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+
+  &:hover {
+    color: var(--accent-1);
+    background: transparent;
+  }
+}
+
+.masthead__menu-item a.nav-active {
+  color: var(--accent-1);
+  background: var(--accent-light);
+}
+
+/* ================================================================
+   Sidebar / Author Profile
+   ================================================================ */
+.sidebar {
+  background: var(--surface);
+
+  @include breakpoint($large) {
+    background: transparent;
+  }
+}
+
+.author__avatar img {
+  border-radius: 50%;
+  border: none;          /* removed the blue ring (border + box-shadow rings) */
+  padding: 0;            /* drop the theme's 5px frame so the photo is clean */
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s var(--ease);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: scale(1.03);
+  }
+}
+
+.author__name {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.author__bio {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.author__urls {
+  list-style: none;
+  padding: 0 !important;
+
+  li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 2px 0 !important;
+    margin-bottom: 2px;
+    white-space: nowrap;
+  }
+
+  /* Plain items (e.g. Texas, USA) — align icon with the <a> items below it.
+     Link rows put the icon inside <a> (padding-left: 6px); match that exactly. */
+  li.no-url {
+    padding-left: 6px !important;
+  }
+
+  a {
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+    border-radius: var(--radius-sm);
+    padding: 3px 6px !important;
+    margin: 0 !important;
+    transition: all 0.2s var(--ease);
+
+    &:hover {
+      background: var(--accent-light);
+      color: var(--accent-1);
+      text-decoration: none;
+    }
+  }
+}
+
+/* ================================================================
+   Page Content — section headings
+   ================================================================ */
+.page__content {
+  h1 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+    border-bottom: none;
+    padding-left: 1rem;
+    border-left: 4px solid var(--accent-2);
+    margin-top: 1.8em;
+    margin-bottom: 0.9em;
+
+    &::after {
+      content: '';
+      display: block;
+      height: 2px;
+      background: linear-gradient(to right, #93c5fd, transparent);
+      margin-top: 0.4em;
+      border-radius: 1px;
+    }
+  }
+
+  /* Italic date/time tags */
+  li em, p > em {
+    font-style: normal;
+    background: #f1f5f9;
+    color: var(--text-muted);
+    padding: 0.1em 0.5em;
+    border-radius: 4px;
+    font-size: 0.87em;
+    font-weight: 500;
+  }
+
+  /* Links */
+  a {
+    color: var(--accent-1);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color 0.2s var(--ease), color 0.2s var(--ease);
+
+    &:hover {
+      color: var(--accent-2);
+      border-bottom-color: #93c5fd;
+      text-decoration: none;
+    }
+  }
+}
+
+/* ================================================================
+   Paper Box — card with hover lift
+   ================================================================ */
+.paper-box {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 1.4em 1.5em;
+  margin-bottom: 1.1em;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s var(--ease), transform 0.25s var(--ease), border-color 0.25s var(--ease);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+    border-color: #bfdbfe;
+  }
+
+  .paper-box-image {
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    order: 2;
+
+    /* Stable containing block for .badge regardless of outer transforms */
+    > div {
+      position: relative;
+    }
+
+    img {
+      max-width: 400px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      object-fit: cover;
+      transition: box-shadow 0.25s var(--ease);
+    }
+  }
+
+  &:hover .paper-box-image img {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+  }
+
+  .paper-box-text {
+    max-width: 100%;
+    order: 1;
+  }
+
+  @include breakpoint($medium) {
+    .paper-box-image {
+      justify-content: left;
+      min-width: 200px;
+      max-width: 34%;
+      order: 1;
+    }
+
+    .paper-box-text {
+      justify-content: left;
+      padding-left: 1.25em;
+      max-width: 66%;
+      order: 2;
+    }
+  }
 }
 
 .badge {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    position: absolute;
-    margin-top: .5em;
-    margin-left: -.5em;
-    color: white;
-    background-color: #00369f;
-    font-size: .8em;
+  box-shadow: 0 2px 8px rgba(20, 24, 28, 0.2);
 }
+
+/* ================================================================
+   Scroll anchor offset (preserved)
+   ================================================================ */
+$scroll_offset: 2em;
+.anchor:before {
+  content: '';
+  display: block;
+  position: relative;
+  width: 0;
+  height: $scroll_offset;
+  margin-top: -$scroll_offset;
+}
+
+/* ================================================================
+   Badge — gradient pill
+   ================================================================ */
+.badge {
+  padding: 0.22em 0.75em;
+  position: absolute;
+  margin-top: 0.55em;
+  margin-left: 0.5em;
+  color: white;
+  background: var(--grad-accent);
+  font-size: 0.70em;
+  font-weight: 700;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(30, 64, 175, 0.38);
+  z-index: 2;
+}
+
+/* ================================================================
+   Horizontal rule
+   ================================================================ */
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, #bfdbfe, var(--border), transparent);
+  margin: 2.5em 0;
+}
+
+/* ================================================================
+   Back-to-top button (populated by ui-enhance.js)
+   ================================================================ */
+#back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--grad-accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(30, 64, 175, 0.42);
+  z-index: 999;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  font-size: 1.25rem;
+  line-height: 1;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(30, 64, 175, 0.55);
+  }
+
+  &.visible {
+    display: flex;
+  }
+}
+
+/* ================================================================
+   Main area white card on light bg
+   ================================================================ */
+.page {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 1.5em 2em;
+  box-shadow: var(--shadow-sm);
+
+  @include breakpoint($large) {
+    border-radius: 12px;
+  }
+}
+
+/* ================================================================
+   Footer
+   ================================================================ */
+.page__footer {
+  background: #1e293b;
+  margin-top: 3em;
+
+  footer {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    padding: 1.2em;
+    text-align: center;
+
+    a {
+      color: #93c5fd;
+      text-decoration: none;
+      border-bottom: none;
+
+      &:hover {
+        color: white;
+      }
+    }
+  }
+}
+
+/* ================================================================
+   Mobile
+   ================================================================ */
+@media (max-width: 768px) {
+  .paper-box {
+    padding: 1em;
+    border-radius: 8px;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .page {
+    padding: 1em 1.2em;
+    border-radius: 8px;
+  }
+
+  #back-to-top {
+    bottom: 1.2rem;
+    right: 1.2rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+}
+
+/* ================================================================
+   DESIGN LAYER v2 — More visual character
+   ================================================================ */
+
+/* 1. Dot grid texture on page background */
+body {
+  background-image: radial-gradient(circle, #b8cce0 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* 2. Hero gradient at top of main content card */
+.page {
+  background:
+    linear-gradient(168deg, rgba(219,234,254,0.6) 0%, rgba(255,255,255,0) 280px),
+    var(--surface);
+}
+
+/* 3. Gradient text for section headings */
+.page__content h1 {
+  background: linear-gradient(110deg, #1e3a8a 0%, #2563eb 50%, #0284c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 4. Paper-box: inset left accent stripe on hover */
+.paper-box {
+  box-shadow: var(--shadow-sm), inset 4px 0 0 transparent;
+  transition: box-shadow 0.28s var(--ease), transform 0.25s var(--ease), border-color 0.25s var(--ease);
+
+  &:hover {
+    box-shadow: var(--shadow-md), inset 4px 0 0 var(--accent-2);
+    transform: translateY(-3px);
+    border-color: #bfdbfe;
+  }
+}
+
+/* Keep the long paper title readable without taking space from its metadata. */
+@include breakpoint($medium) {
+  .paper-box .paper-box-text > p:first-child a {
+    font-size: 1rem;
+    letter-spacing: -0.012em;
+    font-weight: 700;
+  }
+}
+
+/* 5. Sidebar: glassmorphism card + gradient stripe on large screens */
+@include breakpoint($large) {
+  .sidebar {
+    background: rgba(255,255,255,0.68);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: 16px;
+    padding: 1.5em 1.2em;
+    box-shadow: 0 4px 28px rgba(30,64,175,0.08), 0 1px 4px rgba(0,0,0,0.04);
+
+    &::before {
+      content: '';
+      display: block;
+      height: 3px;
+      background: linear-gradient(to right, var(--accent-1), var(--accent-sky));
+      border-radius: 3px;
+      margin-bottom: 1.4em;
+    }
+  }
+}
+
+/* 6. Publication status chip styles (injected by JS) */
+.pub-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2em 0.85em;
+  border-radius: 20px;
+  font-size: 0.76em;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+
+  &--prep {
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+  }
+
+  &--review {
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fbbf24;
+  }
+}
+
+/* 7. Awards: gold left accent (injected class by JS) */
+.award-item {
+  padding-left: 0.7em;
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 4px 4px 0;
+  transition: border-left-color 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    background: rgba(251,191,36,0.06);
+    border-left-color: #d97706;
+  }
+}
+
+/* 8. Animated underline for content links */
+.page__content a:not([class]) {
+  border-bottom: none !important;
+  background-image: linear-gradient(90deg, var(--accent-2), var(--accent-sky));
+  background-size: 0% 1.5px;
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+  transition: background-size 0.3s var(--ease), color 0.2s var(--ease);
+
+  &:hover {
+    color: var(--accent-2);
+    background-size: 100% 1.5px;
+    border-bottom: none !important;
+  }
+}
+
+/* 9. Staggered card entrance animation (CSS side) */
+.paper-box {
+  opacity: 0;
+  transform: translateY(16px);
+
+  &.sz-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.48s var(--ease), transform 0.48s var(--ease),
+                box-shadow 0.28s var(--ease), border-color 0.25s var(--ease);
+  }
+}
+
+/* ================================================================
+   LUXURY LAYER — 7 features
+   ================================================================ */
+
+/* ── 1. Custom scrollbar ── */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--accent-1), var(--accent-sky));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-2);
+}
+
+/* ── 2. Floating orbs (injected by JS) ── */
+#bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  animation: orbFloat var(--orb-dur, 22s) ease-in-out infinite;
+  animation-delay: var(--orb-delay, 0s);
+}
+
+@keyframes orbFloat {
+  0%   { transform: translate(0, 0)          scale(1);    opacity: var(--orb-op, 0.22); }
+  25%  { transform: translate(35px, -55px)   scale(1.08); opacity: calc(var(--orb-op, 0.22) * 1.3); }
+  50%  { transform: translate(-25px, 35px)   scale(0.94); opacity: var(--orb-op, 0.22); }
+  75%  { transform: translate(45px, 15px)    scale(1.04); opacity: calc(var(--orb-op, 0.22) * 0.7); }
+  100% { transform: translate(0, 0)          scale(1);    opacity: var(--orb-op, 0.22); }
+}
+
+/* Ensure page content is always above orbs */
+.page,
+.sidebar,
+.page__footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* The rule above forces the sidebar to `position: relative`, which cancels
+   the `.sticky` utility. Re-assert sticky on large screens with higher
+   specificity (.sidebar.sticky) so the photo column stays in view while the
+   right-hand content scrolls. (Combined with html/body `overflow-x: clip`.) */
+@include breakpoint($large) {
+  .sidebar.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 6em;
+    z-index: 1;
+  }
+}
+
+/* ── 3. Glow pulse on paper-box hover ── */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: var(--shadow-md), inset 4px 0 0 var(--accent-2);
+  }
+  50% {
+    box-shadow: var(--shadow-md), inset 4px 0 0 var(--accent-2),
+                0 0 22px 5px rgba(56, 189, 248, 0.22);
+  }
+}
+
+.paper-box.sz-visible:hover {
+  animation: glowPulse 2.6s ease-in-out infinite;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .paper-box.sz-visible:hover {
+    animation: none;
+  }
+}
+
+/* ── Wider content area: reduce large left/right whitespace ──
+   The theme caps #main at 925px (then 1280px at the x-large breakpoint),
+   which leaves big side margins on wide screens. Let it grow wider. */
+@media (min-width: 925px) {
+  #main {
+    max-width: 1500px;
+  }
+}
+
+/* ================================================================
+   MOBILE OPTIMIZATION — systematic improvements for small screens
+   ================================================================ */
+
+/* ── 1. Prevent horizontal overflow ──
+   Use `clip` (not `hidden`): it clips horizontal overflow WITHOUT turning
+   html/body into a scroll container, so `position: sticky` (left sidebar,
+   masthead) keeps working. `hidden` here would break the sticky sidebar. */
+html, body {
+  overflow-x: clip;
+}
+
+@media (max-width: 767px) {
+
+  /* ── 2. Masthead: always show site name, wrap nav gracefully ── */
+  .masthead__menu-home-item {
+    display: block !important;
+  }
+
+  .masthead__inner-wrap nav > ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 0.1em;
+  }
+
+  .masthead__menu-item a {
+    font-size: 0.84rem;
+    padding: 0.3em 0.5em;
+  }
+
+  /* ── 3. Author profile: centered vertical layout ── */
+  .profile_box {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5em;
+    padding: 0.6em 0 0.2em;
+  }
+
+  .author__avatar {
+    width: auto;
+    display: block;
+
+    img {
+      width: 90px;
+      min-width: 90px;
+      margin: 0 auto;
+      display: block;
+    }
+  }
+
+  .author__content {
+    display: block;
+    width: 100%;
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .author__name {
+    font-size: 1.2rem;
+  }
+
+  .author__bio {
+    font-size: 0.82rem;
+    margin-top: 0.25em;
+  }
+
+  /* ── 4. Social icons: always-visible icon buttons, hide dropdown ── */
+  .author__urls-wrapper {
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    text-align: center;
+
+    /* Hide the "Follow" dropdown trigger — icons shown directly */
+    > button {
+      display: none !important;
+    }
+  }
+
+  .author__urls_sm {
+    display: flex !important;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.45em;
+    padding: 0.4em 0.2em 0.3em;
+    font-size: 1.25em;
+
+    a {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent-2);
+      transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.18s var(--ease);
+      text-decoration: none !important;
+
+      &:hover {
+        background: var(--accent-2);
+        color: #fff;
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  /* ── 5. Paper-box: full-width image on top, text below ── */
+  .paper-box {
+    flex-direction: column;
+
+    .paper-box-image {
+      order: 1;
+      width: 100%;
+      max-width: 100%;
+
+      img {
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .paper-box-text {
+      order: 2;
+      max-width: 100%;
+      padding-left: 0;
+      margin-top: 0.65em;
+    }
+  }
+
+  /* ── 6. Content: overflow protection + readability ── */
+  .page__content {
+    word-break: break-word;
+    overflow-wrap: break-word;
+
+    h1 {
+      font-size: 1.22rem;
+      padding-left: 0.6rem;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    li em, p > em {
+      white-space: normal;
+    }
+  }
+
+  /* ── 7. Sidebar dropdown items: allow wrapping ── */
+  .author__urls li {
+    white-space: normal;
+  }
+
+  /* ── 8. Tables: scroll instead of overflow ── */
+  .page__content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── 9. Page container: slightly tighter side padding ── */
+  #main {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin-top: 0.5em;
+  }
+
+  /* ── 10. Back-to-top: keep inside safe area ── */
+  #back-to-top {
+    bottom: 1rem;
+    right: 0.75rem;
+  }
+}
+
+/* ── Extra small: < 480px ── */
+@media (max-width: 480px) {
+  .masthead__inner-wrap {
+    padding: 0.3em 0.4em;
+  }
+
+  .masthead__menu-item a {
+    font-size: 0.78rem;
+    padding: 0.26em 0.36em;
+  }
+
+  .page {
+    padding: 0.75em 0.7em;
+    border-radius: 6px;
+  }
+
+  .author__avatar img {
+    width: 76px;
+    min-width: 76px;
+  }
+
+  .author__urls_sm {
+    font-size: 1.1em;
+
+    a {
+      width: 34px;
+      height: 34px;
+    }
+  }
+
+  .badge {
+    font-size: 0.62em;
+    padding: 0.16em 0.5em;
+  }
+}
+
+/* ================================================================
+   Copy-to-clipboard — citation buttons, email button, toast
+   ================================================================ */
+
+/* Citation button — top-right of each published paper-box */
+.paper-box { position: relative; }
+
+.copy-cite {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease),
+              color 0.2s var(--ease), border-color 0.2s var(--ease),
+              background 0.2s var(--ease);
+  z-index: 3;
+
+  svg { width: 15px; height: 15px; }
+
+  &:hover {
+    color: var(--accent-2);
+    border-color: var(--accent-2);
+    background: var(--accent-light);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 2px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.paper-box:hover .copy-cite { opacity: 1; transform: translateY(0); }
+
+.copy-cite--ok {
+  opacity: 1 !important;
+  color: #15803d;
+  border-color: #86efac;
+  background: #f0fdf4;
+
+  svg { display: none; }
+  &::after { content: '\2713'; font-size: 15px; font-weight: 800; line-height: 1; }
+}
+
+/* Touch devices have no hover — keep the button discoverable */
+@media (hover: none) {
+  .copy-cite { opacity: 0.7; transform: none; }
+}
+
+/* Toast — frosted slide-up notification */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 2rem;
+  z-index: 10000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  max-width: calc(100vw - 2rem);
+  padding: 0.7em 1.1em;
+  border-radius: 12px;
+  background: rgba(17, 24, 39, 0.92);
+  color: #f8fafc;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 16px);
+  transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+
+  svg {
+    width: 17px;
+    height: 17px;
+    color: #4ade80;
+    flex-shrink: 0;
+  }
+}
+
+.toast--show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 480px) {
+  .toast { bottom: 1.2rem; font-size: 0.8rem; }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .copy-cite,
+  .toast { transition: opacity 0.01ms; transform: none; }
+  .toast--show { transform: translate(-50%, 0); }
+  .copy-cite { transform: none; }
+}
+
+/* ================================================================
+   Author profile — dial the headshot back down a bit and scale the
+   text under it to match.  The earlier "larger photo column" change
+   set the avatar to 240px; bring it to 200px (a moderate reduction,
+   still prominent) and shrink the name / bio / links by the same
+   ~0.83x ratio so the sidebar stays balanced.  All other sidebar
+   work (no ring, sticky column, wider content) is left untouched.
+   ================================================================ */
+.author__avatar img {
+  max-width: 200px;          /* was 240px */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sidebar .author__name {
+  font-size: 1.0em;          /* was $type-size-4 (1.2em) */
+}
+
+@include breakpoint($medium) {
+  .sidebar .author__name {
+    font-size: 1.16em;       /* was $type-size-3 (1.4em) */
+  }
+}
+
+.author__bio {
+  font-size: 0.72rem;        /* was 0.84rem */
+}
+
+.author__urls a,
+.author__urls li.no-url {
+  font-size: 0.84em;         /* was $type-size-5 (1em) */
+}
+
+/* ================================================================
+   Quiet academic theme — neutral palette and reading-first type
+   ================================================================ */
+:root {
+  --accent-1:      #3f454c;
+  --accent-2:      #5b626b;
+  --accent-sky:    #7c858f;
+  --accent-light:  #eceff1;
+  --grad-accent:   linear-gradient(135deg, #3f454c, #5b626b);
+  --grad-progress: linear-gradient(to right, #3f454c, #7c858f);
+  --surface:       #ffffff;
+  --bg-page:       #f5f5f4;
+  --text-primary:  #272b30;
+  --text-muted:    #66707a;
+  --border:        #dde1e4;
+  --shadow-sm:     0 1px 4px rgba(20, 24, 28, 0.06);
+  --shadow-md:     0 4px 16px rgba(20, 24, 28, 0.09);
+  --shadow-lg:     0 10px 32px rgba(20, 24, 28, 0.12);
+}
+
+body {
+  background-color: var(--bg-page);
+  background-image: none;
+}
+
+.page {
+  background: linear-gradient(168deg, rgba(241, 242, 243, 0.82) 0%, rgba(255,255,255,0) 230px), var(--surface);
+}
+
+.page__content {
+  p, li, dl {
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  h1 {
+    font-size: 1.48rem;
+    font-weight: 650;
+    letter-spacing: -0.015em;
+    color: var(--text-primary);
+    -webkit-text-fill-color: var(--text-primary);
+    background: none;
+    border-left: 3px solid #6b7280;
+    padding: 0 0 0.08em 0.7rem;
+    line-height: 1.25;
+    margin-top: 1.65em;
+    margin-bottom: 0.7em;
+
+    &::after {
+      height: 1px;
+      background: linear-gradient(to right, #d1d5db, transparent);
+      margin-top: 0.16em;
+    }
+  }
+
+  a {
+    color: #40464d;
+    font-weight: 500;
+    text-decoration-line: underline;
+    text-decoration-color: #aeb5bb;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+    transition: color 0.18s var(--ease), text-decoration-color 0.18s var(--ease),
+      text-decoration-thickness 0.18s var(--ease), text-underline-offset 0.18s var(--ease);
+
+    &:hover {
+      color: #111827;
+      text-decoration-color: #4b5563;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.22em;
+      background-color: #e9ecee;
+      box-shadow: 0.16em 0 0 #e9ecee, -0.16em 0 0 #e9ecee;
+    }
+  }
+}
+
+.page__content a:not([class]) {
+  background-image: none;
+  background-size: auto;
+
+  &:hover { color: #111827; }
+}
+
+/* Only leading italic text in a list is a date badge. */
+.page__content li > em:not(:first-child) {
+  background: none;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.paper-box {
+  padding: 1.25em 1.35em;
+  border-color: #e0e3e5;
+
+  &:hover {
+    box-shadow: var(--shadow-md), inset 3px 0 0 #6b7280;
+    border-color: #cfd4d8;
+    transform: translateY(-2px);
+  }
+}
+
+.sidebar {
+  box-shadow: 0 4px 24px rgba(20, 24, 28, 0.06), 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.author__content { text-align: center; }
+.sidebar .author__name { font-size: 1.35rem; }
+.author__bio { font-size: 0.98rem; }
+.author__urls a, .author__urls li.no-url { font-size: 1.05rem; }
+.author__urls a {
+  text-decoration-line: underline;
+  text-decoration-color: #c0c5c9;
+  text-underline-offset: 0.15em;
+  transition: color 0.18s var(--ease), text-decoration-color 0.18s var(--ease),
+    text-decoration-thickness 0.18s var(--ease);
+
+  &:hover {
+    text-decoration-color: #4b5563;
+    text-decoration-thickness: 2px;
+  }
+}
+.author__urls li { padding: 4px 0 !important; margin-bottom: 3px; }
+
+.lang-toggle__indicator { background: linear-gradient(135deg, #3f454c, #5b626b); box-shadow: 0 2px 6px rgba(20, 24, 28, 0.2); }
+.lang-toggle button:not(.active):hover { color: #3f454c; }
+.lang-toggle button:focus-visible { outline-color: rgba(91, 98, 107, 0.45); }

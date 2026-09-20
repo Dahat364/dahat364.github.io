@@ -8,7 +8,9 @@
 # Site Settings
 title                    : "Maocai Dai | 戴茂才"
 description              : "M.Sc. student researching Image Aesthetic Assessment and Image Quality Assessment."
+url                      : ""
 repository               : "Dahat364/dahat364.github.io"
+keywords                 : "Maocai Dai, 戴茂才, CQUPT, Image Aesthetic Assessment, Image Quality Assessment, Computer Vision"
 
 # google analytics
 google_analytics_id      :  # get google_analytics_id from https://analytics.google.com/analytics/
@@ -22,13 +24,15 @@ baidu_site_verification  :  # get baidu_site_verification from https://ziyuan.ba
 author:
   name             : "Maocai Dai (戴茂才)"
   avatar           : "images/dmc-avatar.jpg"
-  bio              : "M.Sc. Student @ CQUPT"
+  bio              : "M.Sc. Student @ Computer Science and Technology, Chongqing University of Posts and Telecommunications"
+  bio_zh           : "重庆邮电大学计算机科学与技术专业硕士研究生"
   location         : "Chongqing, China"
+  location_zh      : "中国 · 重庆"
   employer         :
   pubmed           :
   googlescholar    : "https://scholar.google.com/citations?user=NIVSpxEAAAAJ&hl=zh-CN&authuser=1"
   email            : "dahat364@gmail.com"
-  researchgate     :  # e.g., "https://www.researchgate.net/profile/yourprofile"
+  researchgate     :
   uri              :
   bitbucket        :
   codepen          :
@@ -42,9 +46,10 @@ author:
   instagram        :
   impactstory      : # e.g., "https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
   lastfm           :
-  linkedin         : # e.g., "linkedin username"
+  linkedin         :
   dblp             : # e.g., "https://dblp.org/pid/xx/xxxx.html"
-  orcid            : # e.g., "https://orcid.org/xxxx"
+  orcid            :
+  tamu_scholars    :
   pinterest        :
   soundcloud       :
   stackoverflow    : # http://stackoverflow.com/users/123456/username
