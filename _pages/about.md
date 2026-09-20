@@ -70,6 +70,12 @@ We propose **AGREE**, a plug-and-play framework that mitigates attribute-level g
 - *2022.10* The Second Prize Scholarship (CQUPT).
 - *2021.10* The Third Prize Scholarship (CQUPT).
 
+<span class='anchor' id='collaborators'></span>
+
+# 🤝 Collaborators
+
+- [**Guanmeng Xian (贤冠萌)**](https://gmxian.github.io/) *My longtime friend and research peer, with whom I have shared a learning journey since our undergraduate days at CQUPT.*
+
 <span class='anchor' id='educations'></span>
 
 # 📖 Educations
