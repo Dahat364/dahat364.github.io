@@ -8,7 +8,7 @@
 # Site Settings
 title                    : "Maocai Dai | 戴茂才"
 description              : "M.Sc. student researching Image Aesthetic Assessment and Image Quality Assessment."
-url                      : ""
+url                      : "https://dahat364.github.io"
 repository               : "Dahat364/dahat364.github.io"
 keywords                 : "Maocai Dai, 戴茂才, CQUPT, Image Aesthetic Assessment, Image Quality Assessment, Computer Vision"
 
@@ -30,7 +30,7 @@ author:
   location_zh      : "中国 · 重庆"
   employer         :
   pubmed           :
-  googlescholar    : "https://scholar.google.com/citations?user=NIVSpxEAAAAJ&hl=zh-CN&authuser=1"
+  googlescholar    : "https://scholar.google.com/citations?user=NIVSpxEAAAAJ&hl=zh-CN"
   email            : "dahat364@gmail.com"
   researchgate     :
   uri              :
