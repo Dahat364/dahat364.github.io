@@ -79,7 +79,7 @@ Ye Wang, <strong>Maocai Dai</strong>, Jiang Xie, Xiuli Bi*, Fei Tao, Xiao Li, Ho
 
 - <a href="https://gmxian.github.io/"><strong>Guanmeng Xian (贤冠萌)</strong></a> <span lang="en"><em>A longtime friend and fellow researcher from our undergraduate days at CQUPT.</em></span><span lang="zh"><em>本科时期相识的挚友与科研同行者。</em></span>
 - <a href="https://j4ck1e2000.github.io/"><strong>Haokun Ren (任豪坤)</strong></a> <span lang="en"><em>A fellow graduate student and research colleague in our group at CQUPT.</em></span><span lang="zh"><em>研究生阶段的同门与科研伙伴。</em></span>
-- <a href="https://leopoldsimmons.github.io/"><strong>Xuyang Zhou (周绪洋)</strong></a> <span lang="en"><em>A junior member of our group and fellow researcher at CQUPT.</em></span><span lang="zh"><em>同组低一届的师弟与科研伙伴。</em></span>
+- <a href="https://leopoldsimmons.github.io/"><strong>Xuyang Zhou (周绪洋)</strong></a> <span lang="en"><em>A fellow researcher and collaborator in our group at CQUPT.</em></span><span lang="zh"><em>同组低一届的师弟与科研伙伴。</em></span>
 
 <span class='anchor' id='educations'></span>
 
