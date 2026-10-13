@@ -62,6 +62,7 @@ Ye Wang, <strong>Maocai Dai</strong>, Jiang Xie, Xiuli Bi*, Fei Tao, Xiao Li, Ho
 
 # <span lang="en">🎖 Honors and Awards</span><span lang="zh">🎖 荣誉与获奖</span>
 
+- <em>2026.10</em> <span lang="en">National Scholarship for Graduate Students (2025–2026).</span><span lang="zh">研究生国家奖学金（2025–2026 学年）。</span>
 - <em>2026.05</em> <span lang="en"><strong>ICML 2026 Spotlight Paper</strong> — <em>When Attributes Disagree: Gradient Conflict in Image Aesthetic Assessment</em>.</span><span lang="zh"><strong>ICML 2026 Spotlight 论文</strong>——<em>When Attributes Disagree: Gradient Conflict in Image Aesthetic Assessment</em>。</span>
 - <em>2025.10</em> <span lang="en">The Second Scholarship offered by Chongqing University of Posts and Telecommunications.</span><span lang="zh">重庆邮电大学二等奖学金。</span>
 - <em>2023.12</em> <span lang="en">The China National Encouragement Scholarship (2022–2023).</span><span lang="zh">国家励志奖学金（2022–2023 学年）。</span>
@@ -77,6 +78,8 @@ Ye Wang, <strong>Maocai Dai</strong>, Jiang Xie, Xiuli Bi*, Fei Tao, Xiao Li, Ho
 # <span lang="en">🤝 Collaborators</span><span lang="zh">🤝 合作者</span>
 
 - <a href="https://gmxian.github.io/"><strong>Guanmeng Xian (贤冠萌)</strong></a> <span lang="en"><em>My longtime friend and research peer, with whom I have shared a learning journey since our undergraduate days at CQUPT.</em></span><span lang="zh"><em>自本科阶段起共同成长的挚友与科研同行者。</em></span>
+- <a href="https://j4ck1e2000.github.io/"><strong>Haokun Ren (任豪坤)</strong></a> <span lang="en"><em>A fellow graduate student and research colleague in our group at CQUPT.</em></span><span lang="zh"><em>研究生阶段的同门与科研伙伴。</em></span>
+- <a href="https://leopoldsimmons.github.io/"><strong>Xuyang Zhou (周绪洋)</strong></a> <span lang="en"><em>A junior fellow student and emerging research collaborator at CQUPT.</em></span><span lang="zh"><em>低一届的师弟与科研伙伴。</em></span>
 
 <span class='anchor' id='educations'></span>
 
