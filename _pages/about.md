@@ -62,7 +62,7 @@ Ye Wang, <strong>Maocai Dai</strong>, Jiang Xie, Xiuli Bi*, Fei Tao, Xiao Li, Ho
 
 # <span lang="en">🎖 Honors and Awards</span><span lang="zh">🎖 荣誉与获奖</span>
 
-- <em>2026.10</em> <span lang="en"><strong>China National Scholarship for Graduate Students</strong> (2025–2026).</span><span lang="zh"><strong>研究生国家奖学金</strong>（2025–2026 学年）。</span>
+- <em>2026.10</em> <span lang="en">China <strong>National Scholarship</strong> for Graduate Students (2025–2026).</span><span lang="zh">研究生国家奖学金（2025–2026 学年）。</span>
 - <em>2026.05</em> <span lang="en"><strong>ICML 2026 Spotlight Paper</strong> — <em>When Attributes Disagree: Gradient Conflict in Image Aesthetic Assessment</em>.</span><span lang="zh"><strong>ICML 2026 Spotlight 论文</strong>——<em>When Attributes Disagree: Gradient Conflict in Image Aesthetic Assessment</em>。</span>
 - <em>2025.10</em> <span lang="en">The Second Scholarship offered by Chongqing University of Posts and Telecommunications.</span><span lang="zh">重庆邮电大学二等奖学金。</span>
 - <em>2023.12</em> <span lang="en">The China National Encouragement Scholarship (2022–2023).</span><span lang="zh">国家励志奖学金（2022–2023 学年）。</span>
